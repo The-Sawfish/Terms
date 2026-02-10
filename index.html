@@ -312,6 +312,26 @@
             font-size: 0.9rem;
             margin-bottom: 30px;
         }
+
+        .show-always-option {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .show-always-option:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .show-always-option .checkbox-container {
+            padding: 10px;
+        }
+
+        .show-always-option .checkbox-label strong {
+            color: #00ff88;
+        }
     </style>
 </head>
 <body>
@@ -440,6 +460,17 @@
                     I have read and agree to the <a href="#terms" onclick="switchTab('terms')">Terms of Service</a> and <a href="#privacy" onclick="switchTab('privacy')">Privacy Policy</a>. I understand and accept the conditions outlined herein, including the limitations of liability and data collection practices.
                 </span>
             </label>
+            
+            <div class="show-always-option">
+                <label class="checkbox-container">
+                    <input type="checkbox" id="showAlwaysCheckbox">
+                    <span class="checkbox-label">
+                        <strong>🔄 Always show this page</strong><br>
+                        <span style="font-size: 0.9rem; color: #8892b0;">Check this to see the terms page every time you visit. If unchecked, this page will only show once.</span>
+                    </span>
+                </label>
+            </div>
+            
             <button class="proceed-btn" id="proceedBtn" onclick="openBrowser()">
                 🚀 Proceed to Browser
             </button>
@@ -483,9 +514,12 @@
 
         function openBrowser() {
             const browserUrl = 'http://young-imogene-the-sawfish-developers-8e935ec7.koyeb.app';
+            const showAlways = document.getElementById('showAlwaysCheckbox').checked;
 
-            // Set agreement flag in localStorage
-            localStorage.setItem('termsAgreed', 'true');
+            // Only save agreement if "Show Always" is NOT checked
+            if (!showAlways) {
+                localStorage.setItem('termsAgreed', 'true');
+            }
 
             // Open in a new tab (not iframe)
             window.open(browserUrl, '_blank');
@@ -494,7 +528,10 @@
         // Check if user has already agreed to terms
         function checkAgreement() {
             const hasAgreed = localStorage.getItem('termsAgreed');
-            if (hasAgreed === 'true') {
+            const showAlways = localStorage.getItem('showAlways');
+            
+            // Only redirect if user has agreed AND "Show Always" is not enabled
+            if (hasAgreed === 'true' && showAlways !== 'true') {
                 // User has already agreed, redirect to browser
                 const browserUrl = 'http://young-imogene-the-sawfish-developers-8e935ec7.koyeb.app';
                 window.location.href = browserUrl;
